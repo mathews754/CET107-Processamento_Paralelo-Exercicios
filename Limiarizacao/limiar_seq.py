@@ -69,8 +69,8 @@ def create_binary(img, n_linhas, n_colunas, l):
 	return new_img
 
 def main(argv):
-	img_str, l_inicial, diff_limite, is_diff_abs, create_hist, is_verbose = parse_args(argv)
-	img = cv.imread(img_str, 0)
+	img_path, l_inicial, diff_limite, is_diff_abs, create_hist, is_verbose = parse_args(argv)
+	img = cv.imread(img_path, 0)
 	n_linhas, n_colunas = img.shape
 
 	if (is_verbose):
@@ -98,7 +98,8 @@ def main(argv):
 	else:
 		new_img = create_binary(img, n_linhas, n_colunas, l)
 	
-	img_name, img_ext = img_str.split('.')
+	img_name, img_ext = img_path.split('.')[-2:]
+	img_name = img_name.split('/')[-1]
 	if (create_hist):
 		plt.plot(hist, 'b-')
 		plt.axvline(l, 0, max(hist), color='r')
