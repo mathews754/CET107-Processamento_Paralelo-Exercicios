@@ -15,18 +15,20 @@ def parse_args(args):
 	if (len(args) >= 3): diff_limite = int(args[2])
 	else: diff_limite = 5
 	
-	createHist = False
+	create_hist = False
 	is_diff_abs = True
+	is_verbose = False
 	if (len(args) >= 4):
 		for arg in args[3:]:
-			print(arg)
 			if (arg == "-h"): 
-				createHist = True
+				create_hist = True
+			if (arg == '-v'):
+				is_verbose = True
 			if (arg == "-dr"):
 				is_diff_abs = False
 			if (arg == "-da"):
 				is_diff_abs = True
-	return img_name, l_inicial, diff_limite, is_diff_abs, createHist 
+	return img_name, l_inicial, diff_limite, is_diff_abs, create_hist, is_verbose 
 	
 
 def calc_limiar(img, n_linhas, n_colunas, l, err, is_diff_abs):
@@ -67,16 +69,37 @@ def create_binary(img, n_linhas, n_colunas, l):
 	return new_img
 
 def main(argv):
-	img_str, l_inicial, diff_limite, is_diff_abs, createHist = parse_args(argv)
+	img_str, l_inicial, diff_limite, is_diff_abs, create_hist, is_verbose = parse_args(argv)
 	img = cv.imread(img_str, 0)
 	n_linhas, n_colunas = img.shape
 
-	l = calc_limiar(img, n_linhas, n_colunas, l_inicial, diff_limite, is_diff_abs)
-	hist = calc_hist(img, n_linhas, n_colunas)
-	new_img = create_binary(img, n_linhas, n_colunas, l)
+	if (is_verbose):
+		start = time.perf_counter()
+		l = calc_limiar(img, n_linhas, n_colunas, l_inicial, diff_limite, is_diff_abs)
+		finish = time.perf_counter()
+		print("Limiar: ", l)
+		print("Cálculo do limiar feito em {} segundos".format(finish-start))
+	else:
+		l = calc_limiar(img, n_linhas, n_colunas, l_inicial, diff_limite, is_diff_abs)
+	
+	if (is_verbose):
+		start = time.perf_counter()
+		hist = calc_hist(img, n_linhas, n_colunas)
+		finish = time.perf_counter()
+		print("Cálculo do histograma feito em {} segundos".format(finish-start))
+	else:
+		hist = calc_hist(img, n_linhas, n_colunas)
+	
+	if (is_verbose):
+		start = time.perf_counter()
+		new_img = create_binary(img, n_linhas, n_colunas, l)
+		finish = time.perf_counter()
+		print("Binarização da imagem feita em {} segundos".format(finish-start))
+	else:
+		new_img = create_binary(img, n_linhas, n_colunas, l)
 	
 	img_name, img_ext = img_str.split('.')
-	if (createHist):
+	if (create_hist):
 		plt.plot(hist, 'b-')
 		plt.axvline(l, 0, max(hist), color='r')
 		plt.savefig("{}_hist.jpg".format(img_name))
