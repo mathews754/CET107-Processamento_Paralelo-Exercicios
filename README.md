@@ -37,5 +37,3 @@ Executa o código paralelo com 8 threads e utilizando uma diferença relativa de
 Por causa de um problema com o display do WSL não foi possível testar a funcionalidade do salvamento da imagem do histograma, porém o algoritmo sempre o calcula, mesmo que não seja passado o parâmetro `-h`.  
   
 Antes de decidirmos utilizar o PyMP, foram desperdiçadas **muitas** horas tentando implementar o algoritmo sequencial em C utilizando a extensão de C do Python. Depois de muitos problemas, por causa da dificuldade de se compreender o código e do tempo curto, tomamos a decisão de optar pelo caminho mais fácil. Porém, por causa desses diversos contratempos, não foi possível testar se as funcionalidades de processamento paralelo do PyMP estão funcionando nas máquinas, então o código sequencial foi feito assumindo que o PyMP funcionará sem problemas, mas não foram feitos nenhum teste conclusivo.  
-
-
