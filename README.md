@@ -17,17 +17,25 @@ Para executar o código basta apenas executar o comando:
 `python3 limiar_seq.py nome_img.extensao_img`  
 Foram testadas imagens de diferentes resoluções e formatos, entre eles o .png, .jpg, .jpeg e .jfif.
 
-Além do comando básico, também podem ser passados dois argumentos para definir o limiar inicial e a diferença de limite. Estes dois parâmetros precisam estar em ordem para evitar  que os valores fiquem trocados.  
-`python3 limiar_seq.py nome_img.jpg limiar diff`    
-Os valores default do limiar e da diferença limite são, respectivamente, `127` e `5`.
+#### Parâmetros de entrada  
+Além do comando básico, o algoritmo também aceita os seguintes parâmetros como descritos abaixo:  
+- `-l x` -> Define o valor do limiar inicial igual a x. Seu valor default é 127.  
+- `-dl x` -> Define o valor da diferença limite igual a x. Seu valor default é 5.  
+- `-h` -> Define se o algoritmo criará o arquivo do histograma. O histograma em si sempre será calculado, este parâmetro só define se a saída conterá a imagem do histograma ou não.  
+- `-dr ou -da` -> Define que o tipo de cálculo para critério de parada do cálculo do limiar. `dr = diferença relativa` e `da = diferença absoluta`  
+- `-v` -> Executa o código em modo verboso, printando as configurações iniciais, os tempos de cada etapa e o tempo de execução total das etapas de maior custo de performance.  
+- `-nt x (Apenas para a versão paralela)` -> Define que um número de threads usadas na execução igual a x. O valor default é o número máximo de threads da máquina.  
 
-Por fim, também podem ser passados os parâmetros `-h`, `-dr` e `-da` em qualquer ordem depois dos argumentos anteriores.
-O `-h` fará com que o código salve o histograma em uma imagem.  
-Os parâmetro `-dr`(diferença relativa) e `-da`(diferença absoluta) definirão qual tipo de cálculo de diferença será feito para critério de parada. O valor default desse parâmetro é `-da`.    
-Vale notar que estes parâmetros só funcionarão caso venham depois de todos os anteriores, como no exemplo abaixo:  
-`python3 limiar_seq.py img.png 127 5 -h -ra`  
+#### Exemplos
+`python3 limiar_seq.py nome_img.extensao_img -v -h`  
+Executa o código sequencial no modo verboso e com a criação da imagem do histograma.
+
+`python3 limiar_par.py nome_img.extensao_img -nt 8 -dr -dl 0.05`  
+Executa o código paralelo com 8 threads e utilizando uma diferença relativa de 0.05 como critério de parada.   
 
 ### Problemas encontrados  
 Por causa de um problema com o display do WSL não foi possível testar a funcionalidade do salvamento da imagem do histograma, porém o algoritmo sempre o calcula, mesmo que não seja passado o parâmetro `-h`.  
   
-Antes de decidirmos utilizar o PyMP, foram desperdiçadas **muitas** horas tentando implementar o algoritmo sequencial em C utilizando a extensão de C do Python. Depois de muitos problemas, por causa da dificuldade de se compreender o código e do tempo curto, tomamos a decisão de optar pelo caminho mais fácil. Porém, por causa desses diversos contratempos, não foi possível testar se as funcionalidades de processamento paralelo do PyMP estão funcionando nas máquinas, então o código sequencial foi feito assumindo que o PyMP funcionará sem problemas, mas não foram feitos nenhum teste conclusivo.
+Antes de decidirmos utilizar o PyMP, foram desperdiçadas **muitas** horas tentando implementar o algoritmo sequencial em C utilizando a extensão de C do Python. Depois de muitos problemas, por causa da dificuldade de se compreender o código e do tempo curto, tomamos a decisão de optar pelo caminho mais fácil. Porém, por causa desses diversos contratempos, não foi possível testar se as funcionalidades de processamento paralelo do PyMP estão funcionando nas máquinas, então o código sequencial foi feito assumindo que o PyMP funcionará sem problemas, mas não foram feitos nenhum teste conclusivo.  
+
+
