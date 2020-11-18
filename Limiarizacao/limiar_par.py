@@ -36,40 +36,23 @@ def parse_args(args):
         print("Número de threads utilizados:", n_threads)
     return img_name, l_inicial, diff_limite, is_diff_abs, create_hist, is_verbose, n_threads
 
-def calc_limiar(img, img_size, l, err, is_diff_abs, n_threads):
-    diff = err
-    soma_array = pymp.shared.array((2,), dtype='float64')
-    conta_array = pymp.shared.array((2,), dtype='int32')
-    while(diff >= err):
-        # soma_array[0] = somaMenor
-        # soma_array[1] = somaMaior
-        # conta_array[0] = contaMenor
-        # conta_array[1] = contaMaior
-        soma_array[0] = soma_array[1] = 0
-        conta_array[0] = conta_array[1] = 0
-        with pymp.Parallel(n_threads) as p:
-            somaMenor = somaMaior = contaMenor = contaMaior = 0
-            for i in p.range(img_size):
-                if (img[i] < l):
-                    somaMenor += img[i]
-                    contaMenor += 1
-                else:
-                    somaMaior += img[i]
-                    contaMaior += 1
-            with p.lock:
-                soma_array[0] += somaMenor
-                soma_array[1] += somaMaior
-                conta_array[0] += contaMenor
-                conta_array[1] += contaMaior
-        l_maior = soma_array[1]/conta_array[1]
-        l_menor = soma_array[0]/conta_array[0]
-        l1 = (l_maior+l_menor)/2
-        if (is_diff_abs):
-            diff = abs(l1 - l)
-        else:
-            diff = abs(l1 - l)/l
-        l = l1
-    return l
+def calc_limiar(hist, l, err, is_diff_abs):
+	diff = err
+	while (diff >= err):
+		somaMenor = somaMaior = contaMenor = contaMaior = 0
+		for i in range(int(l)):
+			somaMenor += hist[i]*i
+			contaMenor += hist[i]
+		for i in range(int(l), 256):
+			somaMaior += hist[i]*i
+			contaMaior += hist[i]
+		l1 = (somaMaior/contaMaior+somaMenor/contaMenor)/2
+		if (is_diff_abs): 
+			diff = abs(l1 - l)
+		else:
+			diff = abs(l1 - l)/l
+		l = l1
+	return l
 
 def calc_hist(img, img_size, n_threads):
     hist = pymp.shared.array((256,), dtype='uint32')
@@ -97,19 +80,10 @@ def main(argv):
 	img = cv.imread(img_path, 0)
 	n_linhas, n_colunas = img.shape
 	img_v = img.reshape(n_linhas*n_colunas)
-
+    
 	if (is_verbose):
 		print("-------------------------------------------------------")
 		print("Iniciando...")
-		start = start_total = time.perf_counter()
-		l = calc_limiar(img_v, img_v.size, l_inicial, diff_limite, is_diff_abs, n_threads)
-		finish = time.perf_counter()
-		print("Limiar: ", l)
-		print("Cálculo do limiar feito em {} segundos".format(finish - start))
-	else:
-		l = calc_limiar(img_v, img_v.size, l_inicial, diff_limite, is_diff_abs, n_threads)
-    
-	if (is_verbose):
 		start = time.perf_counter()
 		hist = calc_hist(img_v, img_v.size, n_threads)
 		finish = time.perf_counter()
@@ -117,6 +91,15 @@ def main(argv):
 	else:
 		hist = calc_hist(img_v, img_v.size, n_threads)
 	
+	if (is_verbose):
+		start = start_total = time.perf_counter()
+		l = calc_limiar(hist, l_inicial, diff_limite, is_diff_abs)
+		finish = time.perf_counter()
+		print("Limiar: ", l)
+		print("Cálculo do limiar feito em {} segundos".format(finish - start))
+	else:
+		l = calc_limiar(hist, l_inicial, diff_limite, is_diff_abs)
+    
 	if (is_verbose):
 		start = time.perf_counter()
 		new_img = create_binary(img_v, img_v.size, l, n_threads)
