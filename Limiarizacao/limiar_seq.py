@@ -17,7 +17,7 @@ def parse_args(args):
         if (args[i] == "-l" and args[i+1] is not None):
             l_inicial = int(args[i+1])
         if (args[i] == "-dl" and args[i+1] is not None):
-            diff_limite = int(args[i+1])
+            diff_limite = float(args[i+1])
         if (args[i] == "-h"):
             create_hist = True
         if (args[i] == "-dr"):
