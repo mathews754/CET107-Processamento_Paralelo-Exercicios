@@ -54,7 +54,7 @@ def calc_limiar(hist, l, err, is_diff_abs):
 		l = l1
 	return l
 
-def calc_hist(img, img_size, n_threads):
+def calc_hist(img, img_size, n_threads): # Fazer o cálculo com True e False?
     hist = pymp.shared.array((256,), dtype='uint32')
     with pymp.Parallel(n_threads) as p:
         p_hist = [0]*256
