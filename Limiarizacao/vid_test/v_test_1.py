@@ -22,7 +22,7 @@ fourcc = cv.VideoWriter_fourcc(*'XVID')
 out = cv.VideoWriter('output.avi', fourcc, vid_fps, (vid_width, vid_height), isColor=False)
 
 # Para arquivos .mp4
-# fourcc = cv.VideoWriter_fourcc(*'MPEG')
+# fourcc = cv.VideoWriter_fourcc(*'mp4v')
 # out = cv.VideoWriter('output.mp4', fourcc, vid_fps, (vid_width, vid_height), isColor=False)
 
 while(True):
