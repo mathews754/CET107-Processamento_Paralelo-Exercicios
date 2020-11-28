@@ -46,6 +46,10 @@ vid_width, vid_height, vid_fps = get_vid_info(cap)
 fourcc = cv.VideoWriter_fourcc(*'XVID')
 out = cv.VideoWriter('b.avi', fourcc, vid_fps, (vid_width, vid_height), isColor=False)
 
+# Para arquivos .mp4
+#fourcc = cv.VideoWriter_fourcc(*'mp4v')
+#out = cv.VideoWriter('b.mp4', fourcc, vid_fps, (vid_width, vid_height), isColor=False)
+
 while(True):
     ret, frame = cap.read()
     if (ret):
