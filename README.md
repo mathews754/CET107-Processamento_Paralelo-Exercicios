@@ -1,7 +1,8 @@
 # CET107-Processamento_Paralelo-Exercicios
 
-## Sobre o algoritmo de Limiarização  
-O algoritmo de limiarização está na pasta Limiarizacao junto com algumas imagens utilizadas para teste.  
+## Sobre os algoritmos de Limiarização  
+Os algoritmos de limiarização de imagem estão na pasta Limiarizacao junto com algumas imagens utilizadas para teste.
+Os algoritmos de limiarização de vídeo estão na pasta Vid_limiarizacao junto com o vídeo `vid.mp4` utilizado para teste.   
 
 ### Dependências  
 O código foi desenvolvido com o Python3. As bibliotecas utilizadas no código foram:
@@ -15,7 +16,10 @@ Para a criação dos códigos paralelos foram feitos com o PyMP. A instalação 
 ### Como executar o código
 Para executar o código basta apenas executar o comando:  
 `python3 limiar_seq.py nome_img.extensao_img`  
-Foram testadas imagens de diferentes resoluções e formatos, entre eles o .png, .jpg, .jpeg e .jfif.
+ou  
+`python3 limiar_v_seq.py nome_vid.extensao_vid`  
+
+Foram testadas imagens de diferentes resoluções e formatos, entre eles o `.png`, `.jpg`, `.jpeg` e `.jfif`. Para os algoritmos de vídeo, foram testados vídeos com o formado `.mp4` e `.avi`, qualquer outro formato não funcionará.  
 
 #### Parâmetros de entrada  
 Além do comando básico, o algoritmo também aceita os seguintes parâmetros como descritos abaixo:  
@@ -25,6 +29,8 @@ Além do comando básico, o algoritmo também aceita os seguintes parâmetros co
 - `-dr ou -da` -> Define que o tipo de cálculo para critério de parada do cálculo do limiar. `dr = diferença relativa` e `da = diferença absoluta`  
 - `-v` -> Executa o código em modo verboso, printando as configurações iniciais, os tempos de cada etapa e o tempo de execução total das etapas de maior custo de performance.  
 - `-nt x (Apenas para a versão paralela)` -> Define que um número de threads usadas na execução igual a x. O valor default é o número máximo de threads da máquina.  
+
+Os algoritmos de limiarização de vídeo utilizam os mesmos parâmetros, com exceção do parâmetro `-h`, pois decidiu-se que não faz sentido criar uma imagem de histograma para cada frame do vídeo.  
 
 #### Exemplos
 `python3 limiar_seq.py nome_img.extensao_img -v -h`  
