@@ -101,10 +101,11 @@ def main(argv):
     if (vid_ext == "mp4"): fourcc = cv.VideoWriter_fourcc(*'mp4v')
     elif (vid_ext == "avi"): fourcc = cv.VideoWriter_fourcc(*'XVID')
     else: quit("Formato de vídeo não reconhecido.\nAbortando o programa...")
-    out = cv.VideoWriter('{0}_binarizado.{1}'.format(vid_name, vid_ext), fourcc, vid_fps, (vid_width, vid_height), isColor=False)
+    out = cv.VideoWriter('{0}_binary.{1}'.format(vid_name, vid_ext), fourcc, vid_fps, (vid_width, vid_height), isColor=False)
 
     if (is_verbose):
         count = 1
+        t_sum = 0
         start_total = time.perf_counter()
     while(True):
         success, frame = cap.read()
@@ -138,6 +139,7 @@ def main(argv):
                 start = time.perf_counter()
                 new_img_v = create_binary(v_gray, v_gray.size, l, n_threads)
                 finish = finish_frame = time.perf_counter()
+                t_sum += (finish_frame - start_frame)
                 print("Binarização do frame {0} feita em {1} segundos".format(count, (finish-start)))
                 print("Tempo de processamento do frame {0}: {1} segundos".format(count, finish_frame-start_frame))
                 count += 1
@@ -154,6 +156,7 @@ def main(argv):
     if (is_verbose):
         finish_total = time.perf_counter()
         print("-------------------------------------------------------------")
+        print("Tempo gasto fora das etapas chave: {}".format((finish_total-start_total) - t_sum))
         print("Tempo de execução total do algoritmo: {} segundos".format(finish_total-start_total))
     cap.release()
     out.release()

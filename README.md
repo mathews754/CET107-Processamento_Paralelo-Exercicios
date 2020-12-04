@@ -11,8 +11,11 @@ O código foi desenvolvido com o Python3. As bibliotecas utilizadas no código f
 - Pyplot derivada do matplotlib,
 
 Para a criação dos códigos paralelos foram feitos com o PyMP. A instalação na minha máquina foi feita utilizando o Pip com o comando:  
-`pip install pymp-pypi`
- 
+`pip install pymp-pypi`  
+
+Para a criação dos códigos otimizados também foi usado o Cython. Para baixá-lo basta executar o comando:  
+`pip install Cython`  
+  
 ### Como executar o código
 Para executar o código basta apenas executar o comando:  
 `python3 limiar_seq.py nome_img.extensao_img`  
@@ -38,6 +41,12 @@ Executa o código sequencial no modo verboso e com a criação da imagem do hist
 
 `python3 limiar_par.py nome_img.extensao_img -nt 8 -dr -dl 0.05`  
 Executa o código paralelo com 8 threads e utilizando uma diferença relativa de 0.05 como critério de parada.   
+
+#### Executando os códigos otimizados  
+Antes de executar os códigos otimizados, será preciso compilar as funções implementadas em `limiar.pyx`. Para isso, basta executar o comando:  
+`python3 setup.py build_ext --inplace`  
+
+A partir de então, os códigos `limiar_v_seq_o.py` e `limiar_v_par_o.py` devem executar sem problemas.
 
 ### Problemas encontrados  
 Por causa de um problema com o display do WSL não foi possível testar a funcionalidade do salvamento da imagem do histograma, porém o algoritmo sempre o calcula, mesmo que não seja passado o parâmetro `-h`.  

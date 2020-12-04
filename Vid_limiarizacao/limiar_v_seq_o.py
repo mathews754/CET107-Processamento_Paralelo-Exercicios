@@ -1,8 +1,8 @@
 import cv2 as cv
 import numpy as np
-from matplotlib import pyplot as plt
 import sys
 import time
+from limiar import calc_hist, calc_limiar, create_binary
 
 def parse_args(args):
     if (len(args) >= 1): vid_path = args[0]
@@ -34,37 +34,6 @@ def get_vid_info(cap):
   vid_height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
   vid_fps = cap.get(cv.CAP_PROP_FPS)
   return vid_width, vid_height, vid_fps
-
-def calc_hist(img, img_size):
-    hist = [0]*256
-    for i in range(img_size):
-        hist[img[i]] += 1
-    return hist
-
-def calc_limiar(hist, l, err, is_diff_abs):
-    diff = err
-    while (diff >= err):
-        somaMenor = somaMaior = contaMenor = contaMaior = 0
-        for i in range(int(l)):
-            somaMenor += hist[i]*i
-            contaMenor += hist[i]
-        for i in range(int(l), 256):
-            somaMaior += hist[i]*i
-            contaMaior += hist[i]
-        l1 = (somaMaior/contaMaior+somaMenor/contaMenor)/2
-        if (is_diff_abs):
-            diff = abs(l1 - l)
-        else:
-            diff = abs(l1 - l)/l
-        l = l1
-    return l
-
-def create_binary(img, img_size, l):
-    new_img = np.array([0]*img_size, dtype='uint8')
-    for i in range(img_size):
-        if (img[i] > l):
-            new_img[i] = 255
-    return new_img
 
 def main(argv):
     vid_path, l_inicial, diff_limite, is_diff_abs, is_verbose = parse_args(argv)

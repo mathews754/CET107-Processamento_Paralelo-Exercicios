@@ -1,2 +1,7 @@
 c_extension_teste/
 cython_teste/
+MPI_test/
+
+Vid_limiarizacao/build/
+Vid_limiarizacao/limiar.c
+Vid_limiarizacao/limiar.cpython-36m-x86_64-linux-gnu.so
